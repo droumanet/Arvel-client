@@ -1,0 +1,47 @@
+h2 {
+  margin-top: 0;
+}
+
+.tabs {
+  margin-bottom: 0;
+}
+
+.tab-button {
+  background: #eee;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-right: 2px;
+  font-weight: bold;
+  font-size: 14px;
+  transition: background 0.15s;
+}
+
+.tab-button.active {
+  background: #fff;
+  border-bottom: 1px solid #fff;
+  position: relative;
+  z-index: 1;
+}
+
+.tab-button:hover:not(.active) {
+  background: #ddd;
+}
+
+.tab-panel {
+  display: none;
+  border: 1px solid #ccc;
+  padding: 1em;
+  background: #fff;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+.loading {
+  padding: 2em;
+  text-align: center;
+  color: #888;
+}

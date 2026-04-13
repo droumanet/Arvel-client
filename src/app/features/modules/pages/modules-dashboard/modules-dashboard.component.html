@@ -1,0 +1,29 @@
+<h2>Gestion des modules</h2>
+
+<!-- Onglets -->
+<div class="tabs">
+  <button
+    *ngFor="let cat of categories"
+    class="tab-button"
+    [class.active]="activeCategory === cat"
+    (click)="setActiveCategory(cat)">
+    {{ cat | titlecase }}
+  </button>
+</div>
+
+<!-- Chargement -->
+<div *ngIf="loading" class="loading">Chargement des modules…</div>
+
+<!-- Panneaux par catégorie -->
+<div *ngIf="!loading">
+  <div
+    *ngFor="let cat of categories"
+    class="tab-panel"
+    [class.active]="activeCategory === cat">
+    <app-module-table
+      [category]="cat"
+      [modules]="modulesByCategory[cat] || []"
+      (moduleChanged)="onModuleChanged()">
+    </app-module-table>
+  </div>
+</div>

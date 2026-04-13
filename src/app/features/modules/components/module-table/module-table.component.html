@@ -1,0 +1,69 @@
+<table>
+  <thead>
+    <tr>
+      <th>Nom</th>
+      <th>Adresse-Part</th>
+      <th>État</th>
+      <th *ngIf="hasActions">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <!-- Aucun module -->
+    <tr *ngIf="modules.length === 0">
+      <td [attr.colspan]="hasActions ? 4 : 3">Aucun module</td>
+    </tr>
+
+    <!-- Lignes de modules -->
+    <tr *ngFor="let mod of modules">
+      <td>{{ mod.name || mod.id || '—' }}</td>
+      <td>{{ mod.address }}-{{ mod.part }}</td>
+
+      <!-- Colonne État (varie selon la catégorie) -->
+      <td [ngSwitch]="category">
+        <span *ngSwitchCase="'relay'"
+              [ngClass]="isRelayOn(mod) ? 'status-on' : 'status-off'">
+          {{ isRelayOn(mod) ? 'ON' : 'OFF' }}
+        </span>
+
+        <span *ngSwitchCase="'dimmer'">
+          {{ mod.status?.current !== undefined ? mod.status?.current + '%' : '' }}
+        </span>
+
+        <span *ngSwitchCase="'blind'">
+          Fermé à : {{ mod.status?.currentClosedPosition }}% ({{ mod.status?.current }})
+        </span>
+
+        <span *ngSwitchCase="'button'"
+              [ngClass]="mod.status?.pressed ? 'status-on' : 'status-off'">
+          {{ mod.status?.pressed ? 'Appuyé' : 'Relâché' }}
+        </span>
+
+        <span *ngSwitchCase="'temp'">
+          {{ mod.status?.current }}°C
+        </span>
+      </td>
+
+      <!-- Colonne Action -->
+      <td *ngIf="hasActions" [ngSwitch]="category">
+        <app-relay-actions
+          *ngSwitchCase="'relay'"
+          [module]="mod"
+          (actionDone)="onModuleChanged()">
+        </app-relay-actions>
+
+        <app-blind-actions
+          *ngSwitchCase="'blind'"
+          [module]="mod"
+          (actionDone)="onModuleChanged()">
+        </app-blind-actions>
+
+        <app-dimmer-actions
+          *ngSwitchCase="'dimmer'"
+          [module]="mod"
+          (actionDone)="onModuleChanged()">
+        </app-dimmer-actions>
+      </td>
+    </tr>
+  </tbody>
+</table>
