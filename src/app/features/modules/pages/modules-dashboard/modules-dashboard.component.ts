@@ -14,41 +14,37 @@ import { ModuleTableComponent } from '../../components/module-table/module-table
 export class ModulesDashboardComponent implements OnInit {
   categories: ModuleCategory[] = ['relay', 'blind', 'dimmer', 'button', 'temp', 'energy'];
   activeCategory: ModuleCategory = 'relay';
-  modulesByCategory: Record<string, SubModule[]> = {};
+  modules: SubModule[] = [];
   loading = true;
 
   constructor(private modulesApi: ModulesApiService) {}
 
-  ngOnInit(): void { this.loadModules(); }
+  ngOnInit(): void {
+    this.loadCategory(this.activeCategory);
+  }
 
-  loadModules(): void {
+  setActiveCategory(cat: ModuleCategory): void {
+    this.activeCategory = cat;
+    this.loadCategory(cat);
+  }
+
+  onModuleChanged(): void {
+    this.loadCategory(this.activeCategory);
+  }
+
+  private loadCategory(cat: ModuleCategory): void {
     this.loading = true;
-    this.modulesApi.getModules().subscribe({
+    this.modulesApi.getModules(cat).subscribe({
       next: (modules) => {
-        this.modulesByCategory = this.groupByCategory(modules);
+        this.modules = modules;
+        console.log(`${cat}: ${modules.length} module(s)`);
         this.loading = false;
       },
       error: (err) => {
-        console.error('Erreur chargement modules:', err);
+        console.error(`Erreur chargement ${cat}:`, err);
+        this.modules = [];
         this.loading = false;
       }
     });
-  }
-
-  setActiveCategory(cat: ModuleCategory): void { this.activeCategory = cat; }
-
-  onModuleChanged(): void { this.loadModules(); }
-
-  private groupByCategory(modules: SubModule[]): Record<string, SubModule[]> {
-    const grouped: Record<string, SubModule[]> = {};
-    this.categories.forEach(cat => grouped[cat] = []);
-    modules.forEach(mod => {
-      if (Array.isArray(mod.cat)) {
-        mod.cat.forEach(cat => {
-          if (grouped[cat]) grouped[cat].push(mod);
-        });
-      }
-    });
-    return grouped;
   }
 }
