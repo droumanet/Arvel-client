@@ -12,17 +12,14 @@ import { ModuleTableComponent } from '../../components/module-table/module-table
   styleUrls: ['./modules-dashboard.component.css']
 })
 export class ModulesDashboardComponent implements OnInit {
-
-  categories: ModuleCategory[] = ['relay', 'blind', 'dimmer', 'button', 'temp'];
+  categories: ModuleCategory[] = ['relay', 'blind', 'dimmer', 'button', 'temp', 'energy'];
   activeCategory: ModuleCategory = 'relay';
   modulesByCategory: Record<string, SubModule[]> = {};
   loading = true;
 
   constructor(private modulesApi: ModulesApiService) {}
 
-  ngOnInit(): void {
-    this.loadModules();
-  }
+  ngOnInit(): void { this.loadModules(); }
 
   loadModules(): void {
     this.loading = true;
@@ -38,24 +35,17 @@ export class ModulesDashboardComponent implements OnInit {
     });
   }
 
-  setActiveCategory(cat: ModuleCategory): void {
-    this.activeCategory = cat;
-  }
+  setActiveCategory(cat: ModuleCategory): void { this.activeCategory = cat; }
 
-  onModuleChanged(): void {
-    this.loadModules();
-  }
+  onModuleChanged(): void { this.loadModules(); }
 
   private groupByCategory(modules: SubModule[]): Record<string, SubModule[]> {
     const grouped: Record<string, SubModule[]> = {};
     this.categories.forEach(cat => grouped[cat] = []);
-
     modules.forEach(mod => {
       if (Array.isArray(mod.cat)) {
         mod.cat.forEach(cat => {
-          if (grouped[cat]) {
-            grouped[cat].push(mod);
-          }
+          if (grouped[cat]) grouped[cat].push(mod);
         });
       }
     });

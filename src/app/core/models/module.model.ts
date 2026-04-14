@@ -13,4 +13,4 @@ export interface ModuleStatus {
   pressed?: boolean;
 }
 
-export type ModuleCategory = 'blind' | 'relay' | 'dimmer' | 'button' | 'temp';
+export type ModuleCategory = 'blind' | 'relay' | 'dimmer' | 'button' | 'temp' | 'energy';
