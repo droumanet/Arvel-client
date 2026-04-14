@@ -18,7 +18,6 @@ import { ModulesApiService } from '../../../../core/services/modules-api.service
         class="dimmer-slider">
       <span class="dimmer-value">{{ sliderValue }}%</span>
       <button class="action-btn" (click)="setStatus(0)">OFF</button>
-      <button class="action-btn" (click)="editName()">✏️</button>
     </div>
   `,
   styles: [`
@@ -88,15 +87,5 @@ export class DimmerActionsComponent implements OnChanges {
       },
       error: (err) => alert('Erreur: ' + err.message)
     });
-  }
-
-  editName(): void {
-    const name = prompt(`Nouveau nom pour ${this.key} ?`);
-    if (name !== null) {
-      this.api.setModuleName(this.key, name).subscribe({
-        next: () => this.actionDone.emit(),
-        error: (err) => alert('Erreur: ' + err.message)
-      });
-    }
   }
 }

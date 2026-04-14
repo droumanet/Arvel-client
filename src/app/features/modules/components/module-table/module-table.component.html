@@ -2,39 +2,78 @@
   <thead>
     <tr>
       <th>Nom</th>
-      <th>Adresse-Part</th>
+      <th>Adresse</th>
       <th>État</th>
-      <th *ngIf="hasActions">Action</th>
+      @if (isEnergy) {
+        <th>Index</th>
+      }
+      @if (hasActions) {
+        <th>Action</th>
+      }
     </tr>
   </thead>
   <tbody>
-    <tr *ngIf="modules.length === 0">
-      <td [attr.colspan]="hasActions ? 4 : 3">Aucun module</td>
-    </tr>
-    <tr *ngFor="let mod of modules">
-      <td>{{ mod.name || mod.id || '—' }}</td>
-      <td>{{ mod.address }}-{{ mod.part }}</td>
-      <td [ngSwitch]="category">
-        <span *ngSwitchCase="'relay'" [ngClass]="isRelayOn(mod) ? 'status-on' : 'status-off'">
-          {{ isRelayOn(mod) ? 'ON' : 'OFF' }}
-        </span>
-        <span *ngSwitchCase="'dimmer'">
-          {{ mod.status?.current !== undefined ? mod.status?.current + '%' : '' }}
-        </span>
-        <span *ngSwitchCase="'blind'">
-          Fermé à : {{ mod.status?.currentClosedPosition }}% ({{ mod.status?.current }})
-        </span>
-        <span *ngSwitchCase="'button'" [ngClass]="mod.status?.pressed ? 'status-on' : 'status-off'">
-          {{ mod.status?.pressed ? 'Appuyé' : 'Relâché' }}
-        </span>
-        <span *ngSwitchCase="'temp'">{{ mod.status?.current }}°C</span>
-        <span *ngSwitchCase="'energy'">{{ mod.status?.current }} W</span>
-      </td>
-      <td *ngIf="hasActions" [ngSwitch]="category">
-        <app-relay-actions *ngSwitchCase="'relay'" [module]="mod" (actionDone)="onModuleChanged()"></app-relay-actions>
-        <app-blind-actions *ngSwitchCase="'blind'" [module]="mod" (actionDone)="onModuleChanged()"></app-blind-actions>
-        <app-dimmer-actions *ngSwitchCase="'dimmer'" [module]="mod" (actionDone)="onModuleChanged()"></app-dimmer-actions>
-      </td>
-    </tr>
+    @if (modules.length === 0) {
+      <tr>
+        <td [attr.colspan]="isEnergy ? 4 : (hasActions ? 4 : 3)">Aucun module</td>
+      </tr>
+    }
+    @for (mod of modules; track mod.id) {
+      <tr>
+        <td>
+          <button class="edit-btn" (click)="editName(mod)" title="Renommer">✏️</button>
+          {{ mod.name || mod.id }} 
+        </td>
+        <td>{{ mod.id }}</td>
+        <td>
+          @switch (category) {
+            @case ('relay') {
+              <span [ngClass]="isRelayOn(mod) ? 'status-on' : 'status-off'">
+                {{ isRelayOn(mod) ? 'ON' : 'OFF' }}
+              </span>
+            }
+            @case ('dimmer') {
+              <span>{{ mod.status.current !== undefined ? mod.status.current + '%' : '' }}</span>
+            }
+            @case ('blind') {
+              <span>Fermé à : {{ mod.status.currentClosedPosition }}% ({{ mod.status.current }})</span>
+            }
+            @case ('button') {
+              <span [ngClass]="mod.status.pressed ? 'status-on' : 'status-off'">
+                {{ mod.status.pressed ? 'Appuyé' : 'Relâché' }}
+              </span>
+            }
+            @case ('temp') {
+              <span>{{ mod.status.current }}°C</span>
+            }
+            @case ('energy') {
+              <span [ngClass]="mod.status.power ? 'status-on' : ''">
+                {{ mod.status.power !== undefined ? mod.status.power + ' W' : '—' }}
+              </span>
+            }
+          }
+        </td>
+        @if (isEnergy) {
+          <td>
+            {{ mod.status.index !== undefined ? (mod.status.index | number:'1.0-1') + ' kWh' : '—' }}
+          </td>
+        }
+        @if (hasActions) {
+          <td>
+            @switch (category) {
+              @case ('relay') {
+                <app-relay-actions [module]="mod" (actionDone)="onModuleChanged()"></app-relay-actions>
+              }
+              @case ('blind') {
+                <app-blind-actions [module]="mod" (actionDone)="onModuleChanged()"></app-blind-actions>
+              }
+              @case ('dimmer') {
+                <app-dimmer-actions [module]="mod" (actionDone)="onModuleChanged()"></app-dimmer-actions>
+              }
+            }
+          </td>
+        }
+      </tr>
+    }
   </tbody>
 </table>

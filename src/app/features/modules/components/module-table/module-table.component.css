@@ -1,24 +1,20 @@
-table {
-  border-collapse: collapse;
-  width: 100%;
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+th { background: #f5f5f5; }
+.status-on { color: orangered; font-weight: bold; }
+.status-off { color: black; font-weight: bold; }
+
+.edit-btn {
+  background: none;
+  border: solid;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 4px;
+  margin-left: 4px;
+  opacity: 0.5;
+  transition: opacity 0.2s;
 }
 
-th, td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: left;
-}
-
-th {
-  background: #f5f5f5;
-}
-
-.status-on {
-  color: orangered;
-  font-weight: bold;
-}
-
-.status-off {
-  color: black;
-  font-weight: bold;
+.edit-btn:hover {
+  opacity: 1;
 }

@@ -9,7 +9,6 @@ import { ModulesApiService } from '../../../../core/services/modules-api.service
     <button class="action-btn" (click)="setStatus(1)">UP</button>
     <button class="action-btn" (click)="setStatus(-1)">DOWN</button>
     <button class="action-btn" (click)="setStatus(0)">STOP</button>
-    <button class="action-btn" (click)="editName()">✏️</button>
     <button class="action-btn" (click)="editDuration()">⏳️</button>
   `,
   styles: [`
@@ -31,16 +30,6 @@ export class BlindActionsComponent {
       next: () => this.actionDone.emit(),
       error: (err) => alert('Erreur: ' + err.message)
     });
-  }
-
-  editName(): void {
-    const name = prompt(`Nouveau nom pour ${this.key} ?`);
-    if (name !== null) {
-      this.api.setModuleName(this.key, name).subscribe({
-        next: () => this.actionDone.emit(),
-        error: (err) => alert('Erreur: ' + err.message)
-      });
-    }
   }
 
   editDuration(): void {

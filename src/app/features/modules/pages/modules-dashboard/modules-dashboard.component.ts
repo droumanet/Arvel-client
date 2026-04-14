@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModulesApiService } from '../../../../core/services/modules-api.service';
 import { SubModule, ModuleCategory } from '../../../../core/models/module.model';
@@ -17,7 +17,10 @@ export class ModulesDashboardComponent implements OnInit {
   modules: SubModule[] = [];
   loading = true;
 
-  constructor(private modulesApi: ModulesApiService) {}
+  constructor(
+    private modulesApi: ModulesApiService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadCategory(this.activeCategory);
@@ -34,16 +37,20 @@ export class ModulesDashboardComponent implements OnInit {
 
   private loadCategory(cat: ModuleCategory): void {
     this.loading = true;
+    this.cdr.detectChanges();
+
     this.modulesApi.getModules(cat).subscribe({
       next: (modules) => {
         this.modules = modules;
-        console.log(`${cat}: ${modules.length} module(s)`);
         this.loading = false;
+        this.cdr.detectChanges();
+        console.log(`${cat}: ${modules.length} module(s)`);
       },
       error: (err) => {
         console.error(`Erreur chargement ${cat}:`, err);
         this.modules = [];
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }

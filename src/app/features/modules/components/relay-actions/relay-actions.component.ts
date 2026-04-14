@@ -8,7 +8,6 @@ import { ModulesApiService } from '../../../../core/services/modules-api.service
   template: `
     <button class="action-btn" (click)="setStatus(1)">ON</button>
     <button class="action-btn" (click)="setStatus(0)">OFF</button>
-    <button class="action-btn" (click)="editName()">✏️</button>
   `,
   styles: [`
     .action-btn { padding: 4px 8px; margin: 0 2px; cursor: pointer; }
@@ -29,15 +28,5 @@ export class RelayActionsComponent {
       next: () => this.actionDone.emit(),
       error: (err) => alert('Erreur: ' + err.message)
     });
-  }
-
-  editName(): void {
-    const name = prompt(`Nouveau nom pour ${this.key} ?`);
-    if (name !== null) {
-      this.api.setModuleName(this.key, name).subscribe({
-        next: () => this.actionDone.emit(),
-        error: (err) => alert('Erreur: ' + err.message)
-      });
-    }
   }
 }
