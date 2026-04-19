@@ -17,6 +17,9 @@ export class ModuleTableComponent {
   @Input() category!: ModuleCategory;
   @Input() modules: SubModule[] = [];
   @Output() moduleChanged = new EventEmitter<void>();
+  // --- Constantes ---
+  readonly unites: string[] = ["", "m³", "m³", "kWh"]
+  readonly powerunites: string[] = ["", "l/min.", "m³/h", "Wh"]
 
   constructor(private api: ModulesApiService) {}
 

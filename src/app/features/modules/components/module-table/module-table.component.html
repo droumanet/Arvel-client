@@ -48,16 +48,24 @@
             }
             @case ('energy') {
               <span [ngClass]="mod.status.power ? 'status-on' : ''">
-                {{ mod.status.power !== undefined ? mod.status.power + ' W' : '—' }}
+                @if (mod.status.power !== undefined && mod.status.unit !== undefined) {
+                  {{ (mod.status.unit === 1 ? mod.status.power / 60 : mod.status.power) | number:'1.2-2':'fr-FR' }} {{ powerunites[mod.status.unit] }}
+                } @else {
+                  —
+                }
               </span>
             }
           }
         </td>
-        @if (isEnergy) {
-          <td>
-            {{ mod.status.index !== undefined ? (mod.status.index | number:'1.0-1') + ' kWh' : '—' }}
-          </td>
-        }
+      @if (isEnergy) {
+        <td>
+          @if (mod.status.index !== undefined && mod.status.unit) {
+            {{ mod.status.unit === 1 ? mod.status.index/10 : mod.status.index | number:'1.3-3':'fr-FR' }} {{ unites[mod.status.unit] }}
+          } @else {
+            —
+          }
+        </td>
+}
         @if (hasActions) {
           <td>
             @switch (category) {

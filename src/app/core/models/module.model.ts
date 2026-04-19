@@ -17,6 +17,7 @@ export interface ModuleStatus {
   pressed?: boolean;
   // Energy fields
   index?: number;
+  unit?: number;
   power?: number;
   timestamp?: number;
   // Electricity (TeleInfo) fields
